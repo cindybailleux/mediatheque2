@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Documents - Médiathèque{% endblock %}
+
+{% block content %}
+
+    <title>Réserver - {{ document.titre }}</title>
+
+<body>
+    {% if messages %}
+    {% for message in messages %}
+        <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+    <h1>Réserver : {{ document.titre }}</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="date_venue">Choisir votre date de venue :</label>
+        <input type="date" id="date_venue" name="date_venue" required><br><br>
+
+        <button type="submit">Valider la réservation</button>
+    </form>
+
+    <a href="/documents/">Retour au documents</a>
+
+</body>
+</html>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <p>&copy; 2025 Médiathèque</p>
+    </footer>
+{% endblock %}

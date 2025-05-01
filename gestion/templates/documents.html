@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Documents - Médiathèque{% endblock %}
+
+{% block content %}
+    <main>
+        <h1>Catalogue des documents</h1>
+
+{# Filtrage pour rechercher documents #}
+        <form method="get">
+            <label>Type :</label>
+            <select name="type_document">
+                <option value="">Tous</option>
+                <option value="livre">Livre imprimé</option>
+                <option value="cd">CD audio</option>
+                <option value="dvd">DVD / Blu-Ray</option>
+                <option value="magazine">Magazine</option>
+            </select>
+
+            <label>Auteur :</label>
+            <input type="text" name="auteur" placeholder="Nom de l'auteur">
+
+            <label>Genre :</label>
+            <input type="text" name="genre" placeholder="Genre (roman, thriller...)">
+
+            <label for="date_choisie">Filtrer par date d'emprunt souhaitée :</label>
+            <input type="date" id="date_choisie" name="date_choisie" value="{{ date_choisie }}">
+            <br>
+
+            <label>Date de sortie après :</label>
+            <input type="date" name="date_min">
+
+            <label>Durée maximale (minutes) :</label>
+            <input type="number" name="duree_max" placeholder="Durée max en minutes">
+
+            <button type="submit">Filtrer</button>
+        </form>
+        <br>
+
+        <table border="1">
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Type</th>
+                <th>Genre</th>
+                <th>Disponibilité</th>
+                <th>Nombre de pages</th>
+                <th>Durée (minutes)</th>
+                <th>Date de sortie</th>
+
+            </tr>
+
+            {% for info in documents_info %}
+                <tr>
+                    <td>{{ info.document.titre }}</td>
+                    <td>{{ info.document.auteur }}</td>
+                    <td>{{ info.document.get_type_document_display }}</td>
+                    <td>{{ info.document.genre }}</td>
+                    <td>
+{# si le document est disponible, le bouton réserver apparait, sinon impossible de réserver #}
+                        {% if user.is_authenticated and abonnement_valide and info.disponible %}
+                        <form method="get" action="{% url 'reserver_document' info.document.id %}">
+                            <input type="hidden" name="date_venue" value="{{ date_choisie }}">
+                            <button type="submit">Réserver</button>
+                        </form>
+                        {% else %}
+                            Déjà réservé 
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if info.document.nombre_pages %}
+                            {{ info.document.nombre_pages }} pages
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                
+                    <td>
+                        {% if info.document.duree_minutes %}
+                            {{ info.document.duree_minutes }} min
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    
+                    <td>
+                        {% if info.document.date_sortie %}
+                            {{ info.document.date_sortie }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </main>
+</body>
+
+{% endblock %}
+{% block footer %}
+    <footer>
+        <p>&copy; 2025 Médiathèque</p>
+    </footer>
+{% endblock %}

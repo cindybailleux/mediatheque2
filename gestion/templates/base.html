@@ -1,0 +1,79 @@
+{# Barre de navigation communes à toutes les pages html #}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Médiathèque de Montpellier{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+<body>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}    
+    <header>
+        <nav>
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+{# Pour les administrateurs #}
+                    <a href="/">Accueil</a>
+                    <a href="/admin/">Connexion Admin</a>
+                    <a href="/deconnexion/">Déconnexion</a>
+                {% else %}
+{# Pour les inscrits #}
+                    <a href="/">Accueil</a>
+                    <a href="/contact/">Contact</a>
+                    <a href="/documents/">Documents</a>
+                    <a href="/mes_reservations/">Mes Réservations</a>
+        
+                    {% with user.profilutilisateur as profil %}
+                        {% if profil.abonnement_valide %}
+                            <a href="/mon_compte/">Mon Compte</a>
+                        {% endif %}
+                    {% endwith %}
+        
+                    <a href="/deconnexion/">Déconnexion</a>
+                {% endif %}
+            {% else %}
+
+{# Pour les personnes non connectés #}
+                <a href="/">Accueil</a>
+                <a href="/contact/">Contact</a>
+                <a href="/documents/">Documents</a>
+                <a href="/connexion/">Connexion</a>
+                <a href="/inscription/">Inscription</a>
+                <a href="/admin/">Connexion Admin</a>
+            {% endif %}
+        </nav>
+    </header>
+
+
+ {# Si un utilisateur s'est inscrit mais n'est pas encore abonné, alors il voit ce message d'erreur sur toutes les pages car il n'a pas payé sa cotisation #}
+ 
+    {% if user.is_authenticated %}
+    {% if not user.is_staff %}
+        {% with user.profilutilisateur as profil %}
+            {% if not profil.abonnement_valide %}
+                <div style="background-color: #ffdddd; color: #aa0000; padding: 15px; border: 1px solid red; margin: 0 20px 10px 20px; text-align: center;">
+                    Attention!  Votre abonnement n'est pas encore validé.<br>
+                    Merci de vous rendre à la médiathèque pour régler votre cotisation afin de profiter de toutes les fonctionnalités du site.
+                </div>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
+{% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+</html>

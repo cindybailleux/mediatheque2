@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion - Médiathèque{% endblock %}
+
+{% block content %}
+
+        <h1>Connexion</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: red;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="/connexion/">
+            {% csrf_token %}
+            <label for="email">Adresse Email :</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" name="password" required><br>
+
+            <button type="submit">Se connecter</button>
+        </form>
+        
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <p>&copy; 2025 Médiathèque</p>
+    </footer>
+{% endblock %}

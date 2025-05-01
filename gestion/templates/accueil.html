@@ -1,0 +1,39 @@
+{# Page d'accueil du site de la médiathèque visible par tout le monde, même les personnes non connectées #}
+
+{% extends "base.html" %}
+
+{% block title %}Accueil - Médiathèque de Montpellier{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<h1>Bienvenue à la Médiathèque de Montpellier</h1>
+<img src="{% static 'media/mediatheque.jpg' %}" alt="Photo de la médiathèque" class="image-large">
+
+
+<p>Venez découvrir notre espace culturel, où vous pouvez emprunter des livres, CD, DVD, consulter des magazines, réserver des créneaux de prêt en ligne et gérer votre compte d’abonné.
+    Nous sommes disponibles pour vous aider à trouver le document que vous cherchez et vous conseiller sur nos pépites.</p>
+</p>
+
+<hr>
+
+<h2> Adresse</h2>
+<p> 50 Allée Antoine de Saint-Exupéry<br>
+34000 Montpellier</p>
+
+<h2>🕒 Horaires d'ouverture</h2>
+<table>
+    <tr><th>Jour</th><th>Horaires</th></tr>
+    <tr><td>Lundi</td><td>Fermé </td></tr>
+    <tr><td>Mardi</td><td>10h – 18h</td></tr>
+    <tr><td>Mercredi</td><td>10h – 18h</td></tr>
+    <tr><td>Jeudi</td><td>10h – 18h</td></tr>
+    <tr><td>Vendredi</td><td>14h – 18h</td></tr>
+    <tr><td>Samedi</td><td>10h – 18h</td></tr>
+    <tr><td>Dimanche</td><td>Fermé</td></tr>
+</table>
+
+<hr>
+
+{% endblock %}

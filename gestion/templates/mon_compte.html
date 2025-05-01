@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Documents - Médiathèque{% endblock %}
+
+{% block content %}
+
+<h1>Mon compte</h1>
+
+<p><strong>Nom :</strong> {{ profil.user.first_name }} {{ profil.user.last_name }}</p>
+<p><strong>Email :</strong> {{ profil.user.email }}</p>
+<h3>Coût de l’abonnement :</h3>
+<p>
+    {% if profil.est_gratuit %}
+        Votre abonnement est gratuit.
+    {% else %}
+        tarif normal : 22 € par an ou tarif réduit : 10,50 € par mois
+    {% endif %}
+</p>
+
+<p><strong>Date d’abonnement :</strong> {{ profil.date_abonnement }}</p>
+
+<p><strong>Date de renouvellement :</strong> {{ date_renouvellement }}</p>
+{% if profil.abonnement_valide %}
+    <p style="color: green;"><strong>Abonnement :</strong> À jour </p>
+{% else %}
+    <p style="color: red;"><strong>Abonnement :</strong> Non valide </p>
+{% endif %}
+
+{% if abonnement_en_retard %}
+    <p style="color: red;"><strong>Rappel :</strong> Une lettre de rappel a été envoyée </p>
+{% elif profil.lettre_envoyee %}
+    <p style="color: orange;"><strong>Rappel :</strong> Lettre de rappel envoyée</p>
+{% else %}
+    <p><strong>Rappel :</strong> Aucun rappel envoyé</p>
+{% endif %}
+
+{% if emprunts %}
+    <table>
+        <tr>
+            <th>Document</th>
+            <th>Date d’emprunt</th>
+            <th>Date retour prévue</th>
+            <th>Date retour réelle</th>
+            <th>Statut</th>
+        </tr>
+        {% for emprunt in emprunts %}
+        <tr>
+            <td>{{ emprunt.document.titre }}</td>
+            <td>{{ emprunt.date_emprunt }}</td>
+            <td>{{ emprunt.date_retour_prevue }}</td>
+            <td>{{ emprunt.date_retour_reelle|default:"—" }}</td>
+            <td>
+                {% if emprunt.date_retour_reelle %}
+                    ✅ Rendu
+                {% elif emprunt.date_retour_prevue < today %}
+                    🔴 En retard
+                {% else %}
+                    ⏳ En cours
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>Vous n’avez pas encore emprunté de document.</p>
+{% endif %}
+
+
+{% endblock %}

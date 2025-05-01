@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Documents - Médiathèque{% endblock %}
+
+{% block content %}
+<body>
+
+<h1>Mes Réservations</h1>
+
+{% if reservations %}
+    <table border="1">
+        <tr>
+            <th>Document</th>
+            <th>Date de venue</th>
+            <th>Action</th>
+        </tr>
+        {% for resa in reservations %}
+        <tr>
+            <td>{{ resa.document.titre }}</td>
+            <td>{{ resa.date_venue }}</td>
+            <td>
+                <form method="post" action="{% url 'annuler_reservation' resa.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Annuler</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>Vous n'avez aucune réservation.</p>
+{% endif %}
+
+<a href="/documents/">Retour aux documents</a>
+
+</body>
+</html>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <p>&copy; 2025 Médiathèque</p>
+    </footer>
+{% endblock %}
